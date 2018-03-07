@@ -91,3 +91,20 @@ cor(df$white, df$over50k)
 cor(df$american, df$over50k)
 
 # selecionados: american (true), sex (male), white (true), married (true), age (30 < age <= 65)
+
+named_nodes = c("american", "white", "male", "married", "primeage", "over50k")
+
+e = empty.graph(named_nodes)
+
+adj = matrix(0L, ncol = 6, nrow = 6,
+            dimnames = list(named_nodes, named_nodes))
+
+adj["american", "white"] = 1L
+adj["white", "over50k"] = 1L
+adj["male", "over50k"] = 1L
+adj["married", "over50k"] = 1L
+adj["primeage", "over50k"] = 1L
+
+amat(e) = adj
+
+e
