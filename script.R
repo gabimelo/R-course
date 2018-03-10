@@ -2,7 +2,10 @@ df = read.csv("adult.csv")
 
 printPercentages <- function(column){
   tab <- with(df, table(income, column))
-  prop.table(tab, margin = 1)*100
+  print(prop.table(tab, margin = 1)*100)
+  
+  tab <- with(df, table(column, income))
+  print(prop.table(tab, margin = 1)*100)
 }
 
 df$fnlwgt <- NULL
@@ -92,6 +95,8 @@ cor(df$american, df$over50k)
 
 # selecionados: american (true), sex (male), white (true), married (true), age (30 < age <= 65)
 
+library(bnlearn)
+
 named_nodes = c("american", "white", "male", "married", "primeage", "over50k")
 
 e = empty.graph(named_nodes)
@@ -108,3 +113,23 @@ adj["primeage", "over50k"] = 1L
 amat(e) = adj
 
 e
+
+
+# df$age = NULL
+# df$workclass = NULL
+# df$education = NULL
+# df$sex = NULL
+# df$overtime = NULL
+# 
+# df$american[df$american == FALSE] <- 0
+# df$american[df$american == TRUE] <- 1
+# df$white[df$white == FALSE] <- 0
+# df$white[df$white == TRUE] <- 1
+# df$married[df$married == FALSE] <- 0
+# df$married[df$married == TRUE] <- 1
+# df$primeage[df$primeage == FALSE] <- 0
+# df$primeage[df$primeage == TRUE] <- 1
+# df$male[df$male == FALSE] <- 0
+# df$male[df$male == TRUE] <- 1
+# df$over50k[df$over50k == FALSE] <- 0
+# df$over50k[df$over50k == TRUE] <- 1
