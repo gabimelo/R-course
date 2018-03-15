@@ -2,3 +2,4 @@
 StateNames.csv
 really_big_data.csv
 .Rproj.user
+packrat/lib*/
