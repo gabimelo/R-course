@@ -39,7 +39,7 @@ sensitivity = TP/(TP+FN) # 0.96
 specificity = TN/(TN+FP) # 0.7049
 precision = TP/(TP+FP) # 0.6790
 
-ROC = sensitivity * (1- specificity) # 0.2833
+ROC = sensitivity * (1 - specificity) # 0.2833
 
 library(Metrics)
 
