@@ -23,6 +23,8 @@ sensitivity = TP/(TP+FN) # 0.6435
 specificity = TN/(TN+FP) # 0.8008
 precision = TP/(TP+FP) # 0.5060
 
+misclassification = (FN+FP)/total # 0.2312
+
 ROC = sensitivity * (1 - specificity) # 0.1282
 
 library(Metrics)
