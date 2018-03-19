@@ -146,46 +146,52 @@ df$education = NULL
 df$sex = NULL
 df$overtime = NULL
 
-df$american[df$american == FALSE] <- 0
-df$american[df$american == TRUE] <- 1
-df$white[df$white == FALSE] <- 0
-df$white[df$white == TRUE] <- 1
-df$married[df$married == FALSE] <- 0
-df$married[df$married == TRUE] <- 1
-df$primeage[df$primeage == FALSE] <- 0
-df$primeage[df$primeage == TRUE] <- 1
-df$male[df$male == FALSE] <- 0
-df$male[df$male == TRUE] <- 1
-df$over50k[df$over50k == FALSE] <- 0
-df$over50k[df$over50k == TRUE] <- 1
-
 test_set$age = NULL
 test_set$workclass = NULL
 test_set$education = NULL
 test_set$sex = NULL
 
-test_set$american[test_set$american == FALSE] <- 0
-test_set$american[test_set$american == TRUE] <- 1
-test_set$white[test_set$white == FALSE] <- 0
-test_set$white[test_set$white == TRUE] <- 1
-test_set$married[test_set$married == FALSE] <- 0
-test_set$married[test_set$married == TRUE] <- 1
-test_set$primeage[test_set$primeage == FALSE] <- 0
-test_set$primeage[test_set$primeage == TRUE] <- 1
-test_set$male[test_set$male == FALSE] <- 0
-test_set$male[test_set$male == TRUE] <- 1
-test_set$over50k[test_set$over50k == FALSE] <- 0
-test_set$over50k[test_set$over50k == TRUE] <- 1
+write.csv(df, file = "adult/df.csv")
+write.csv(test_set, file = "adult/test_set.csv")
 
-df$over50k = factor(df$over50k, levels = c(0,1))
-df$american = factor(df$american, levels = c(0,1))
-df$white = factor(df$white, levels = c(0,1))
-df$male = factor(df$male, levels = c(0,1))
-df$married = factor(df$married, levels = c(0,1))
-df$primeage = factor(df$primeage, levels = c(0,1))
-test_set$over50k = factor(test_set$over50k, levels = c(0,1))
-test_set$american = factor(test_set$american, levels = c(0,1))
-test_set$white = factor(test_set$white, levels = c(0,1))
-test_set$male = factor(test_set$male, levels = c(0,1))
-test_set$married = factor(test_set$married, levels = c(0,1))
-test_set$primeage = factor(test_set$primeage, levels = c(0,1))
+# df$american[df$american == FALSE] <- 0
+# df$american[df$american == TRUE] <- 1
+# df$white[df$white == FALSE] <- 0
+# df$white[df$white == TRUE] <- 1
+# df$married[df$married == FALSE] <- 0
+# df$married[df$married == TRUE] <- 1
+# df$primeage[df$primeage == FALSE] <- 0
+# df$primeage[df$primeage == TRUE] <- 1
+# df$male[df$male == FALSE] <- 0
+# df$male[df$male == TRUE] <- 1
+# df$over50k[df$over50k == FALSE] <- 0
+# df$over50k[df$over50k == TRUE] <- 1
+# 
+# test_set$american[test_set$american == FALSE] <- 0
+# test_set$american[test_set$american == TRUE] <- 1
+# test_set$white[test_set$white == FALSE] <- 0
+# test_set$white[test_set$white == TRUE] <- 1
+# test_set$married[test_set$married == FALSE] <- 0
+# test_set$married[test_set$married == TRUE] <- 1
+# test_set$primeage[test_set$primeage == FALSE] <- 0
+# test_set$primeage[test_set$primeage == TRUE] <- 1
+# test_set$male[test_set$male == FALSE] <- 0
+# test_set$male[test_set$male == TRUE] <- 1
+# test_set$over50k[test_set$over50k == FALSE] <- 0
+# test_set$over50k[test_set$over50k == TRUE] <- 1
+
+# df[] <- lapply(df, factor)
+# test_set[] <- lapply(test_set, factor)
+
+# df$over50k = factor(df$over50k, levels = c(0,1))
+# df$american = factor(df$american, levels = c(0,1))
+# df$white = factor(df$white, levels = c(0,1))
+# df$male = factor(df$male, levels = c(0,1))
+# df$married = factor(df$married, levels = c(0,1))
+# df$primeage = factor(df$primeage, levels = c(0,1))
+# test_set$over50k = factor(test_set$over50k, levels = c(0,1))
+# test_set$american = factor(test_set$american, levels = c(0,1))
+# test_set$white = factor(test_set$white, levels = c(0,1))
+# test_set$male = factor(test_set$male, levels = c(0,1))
+# test_set$married = factor(test_set$married, levels = c(0,1))
+# test_set$primeage = factor(test_set$primeage, levels = c(0,1))

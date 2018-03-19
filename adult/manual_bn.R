@@ -1,10 +1,18 @@
 library(bnlearn)
 
+df <- read.csv("adult/df.csv")
+test_set <- read.csv("adult/test_set.csv")
+df['X'] <- NULL
+test_set['X'] <- NULL
+
+df[] <- lapply(df, factor)
+test_set[] <- lapply(test_set, factor)
+
 # manual graph, learned probabilities
 
 dag = model2network("[american][white|american][male][married][primeage][over50k|white:male:married:primeage]")
 
-bn.fit(dag, df)
+manual_net_learned_probs <- bn.fit(dag, df)
 
 plot(dag)
 
@@ -31,8 +39,9 @@ dim(cptO) = c(2, 2, 2, 2, 2)
 dimnames(cptO) = list("over50k" = c(0, 1), "white" =  c(0, 1), "male" =  c(0, 1), "married" =  c(0, 1), "primeage" =  c(0, 1))
 
 net = model2network("[american][white|american][male][married][primeage][over50k|white:male:married:primeage]")
-dfit = custom.fit(net, dist = list(american = cptA, white = cptW, male = cptML, married = cptMR, primeage = cptP, over50k = cptO))
-dfit
+manual = custom.fit(net, dist = list(american = cptA, white = cptW, male = cptML, married = cptMR, primeage = cptP, over50k = cptO))
+manual
+plot(net)
 
 # learned probabilities and graph:
 
@@ -40,18 +49,42 @@ pdag = iamb(df)
 pdag
 plot(pdag)
 
-dag2 = set.arc(dag2, from = "male", to = "married")
-dag2 = set.arc(dag2, from = "male", to = "over50k")
-dag2 = set.arc(dag2, from = "married", to = "over50k")
+# dag2 = set.arc(dag2, from = "male", to = "married")
+# dag2 = set.arc(dag2, from = "male", to = "over50k")
+pdag = set.arc(pdag, from = "married", to = "male")
+pdag = set.arc(pdag, from = "primeage", to = "married")
 
-plot(dag2)
+plot(pdag)
 
-fit = bn.fit(dag2, df)
-
-# fit
+automatic = bn.fit(pdag, df)
 
 # scoring
 
 score(dag, df)
 score(net, df)
-score(dag2, df)
+score(pdag, df)
+
+# testing the predictions:
+
+y_pred = predict(manual_net_learned_probs, node='over50k', data=test_set[-6])
+y_pred = predict(manual, node='over50k', data=test_set[-6])
+y_pred = predict(automatic, node='over50k', data=test_set[-6])
+
+cm = table(test_set[,6], y_pred)
+TN = true_negatives = cm[1, "0"]
+FN = false_negatives = cm[2, "0"]
+FP = false_positives = cm[1, "1"]
+TP = true_positives = cm[2, "1"]
+total = TN + FN + FP + TP
+
+accuracy = (TN + TP)/total # 0.7661; 0.7676; 0.7688
+sensitivity = TP/(TP+FN) # 0.0702; 0.4001; 0.6578
+specificity = TN/(TN+FP) # 0.9814; 0.8812; 0.8031
+precision = TP/(TP+FP) # 0.5389; 0.5103; 0.5082
+
+ROC = sensitivity * (1 - specificity) # 0.0013; 0.0475; 0.1295
+
+library(Metrics)
+
+mse(actual = as.integer(test_set[,6]), predicted = as.integer(y_pred))
+# 0.2338; 0.2324; 0.2312

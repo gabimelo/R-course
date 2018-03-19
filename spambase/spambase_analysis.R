@@ -10,7 +10,8 @@ for (name in names){
 }
 
 names(df)[names(df) == 'X1'] <- 'spam'
-df$spam = factor(df$spam, levels = c(0,1))
+df$spam = factor(df$spam)
+# df[] <- lapply(df, factor)
 
 library(caTools)
 
@@ -22,9 +23,9 @@ library(e1071)
 
 classifier = naiveBayes(x = training_set[-58], y = training_set$spam)
 
-y_pred = predict(classifier, newdata = test_set[-58])
+y_pred <- predict(classifier, test_set)
 
-cm = table(test_set[,58], y_pred)
+cm = table(test_set[,"spam"], y_pred)
 
 TN = true_negatives = cm[1, "0"]
 FN = false_negatives = cm[2, "0"]
@@ -34,12 +35,12 @@ total = TN + FN + FP + TP
 
 # é muito ruim ter o número de false positives tão elevado
 
-accuracy = (TN + TP)/total # 0.8054
-sensitivity = TP/(TP+FN) # 0.96
-specificity = TN/(TN+FP) # 0.7049
-precision = TP/(TP+FP) # 0.6790
+accuracy = (TN + TP)/total # 0.8054 ---> se coloco como factor todas as colunas, aqui aumenta pra 90
+sensitivity = TP/(TP+FN) # 0.96 --> 83
+specificity = TN/(TN+FP) # 0.7049 --> 95
+precision = TP/(TP+FP) # 0.6790 --> 91
 
-ROC = sensitivity * (1 - specificity) # 0.2833
+ROC = sensitivity * (1 - specificity) # 0.2833 --> 0.04
 
 library(Metrics)
 
@@ -47,4 +48,4 @@ test_set[,58] = factor(test_set[,58], levels = c(0,1))
 y_pred = factor(y_pred, levels = c(0,1))
 
 mse(actual = as.integer(test_set[,58]), predicted = as.integer(y_pred))
-# 0.1945
+# 0.1945 ---> 0.097
