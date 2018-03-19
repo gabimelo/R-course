@@ -1,5 +1,13 @@
 library(e1071)
 
+df <- read.csv("adult/df.csv")
+test_set <- read.csv("adult/test_set.csv")
+df['X'] <- NULL
+test_set['X'] <- NULL
+
+df$over50k = factor(df$over50k)
+test_set$over50k = factor(test_set$over50k)
+
 classifier = naiveBayes(x = df[-6], y = df$over50k)
 
 y_pred = predict(classifier, newdata = test_set[-6])

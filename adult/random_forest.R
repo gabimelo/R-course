@@ -1,14 +1,17 @@
 library(rpart)
 
-df$over50k = factor(df$over50k, levels = c(0,1))
-test_set$over50k = factor(test_set$over50k, levels = c(0,1))
+df <- read.csv("adult/df.csv")
+test_set <- read.csv("adult/test_set.csv")
+df['X'] <- NULL
+test_set['X'] <- NULL
 
-classifier = rpart(formula = over50k ~ american + white + married + primeage + male, data = df)
+df$over50k = factor(df$over50k)
+test_set$over50k = factor(test_set$over50k)
 
+classifier = rpart(formula = over50k~., data = df, control=rpart.control(minsplit=15, minbucket=5,cp=0.005))
 y_pred = predict(classifier, newdata = test_set[-6], type = 'class')
 
 cm = table(test_set[,6], y_pred)
-cm
 TN = true_negatives = cm[1, "0"]
 FN = false_negatives = cm[2, "0"]
 FP = false_positives = cm[1, "1"]
@@ -24,8 +27,8 @@ ROC = sensitivity * (1 - specificity) # 0.1282
 
 library(Metrics)
 
-# test_set[,6] = factor(test_set[,6], levels = c(0,1))
-# y_pred = factor(y_pred, levels = c(0,1))
+# test_set[,6] = factor(test_set[,6])
+# y_pred = factor(y_pred)
 
 mse(actual = as.integer(test_set[,6]), predicted = as.integer(y_pred))
 # 0.2371
