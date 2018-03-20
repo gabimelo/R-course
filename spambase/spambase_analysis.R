@@ -10,8 +10,8 @@ for (name in names){
 }
 
 names(df)[names(df) == 'X1'] <- 'spam'
-df$spam = factor(df$spam)
-# df[] <- lapply(df, factor)
+# df$spam = factor(df$spam)
+df[] <- lapply(df, factor)
 
 library(caTools)
 
