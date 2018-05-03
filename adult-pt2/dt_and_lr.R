@@ -50,7 +50,7 @@ y_pred_dt = predict(dt, newdata = test_set[-12], type = 'class')
 #printcp(dt)
 #plotcp(dt)
 #summary(dt)
-fancyRpartPlot(dt)
+rpart.plot(dt)
 confusionMatrix(y_pred_dt, test_set$income)
 
 # cp 0.0010 acc 0.839 terminal nodes 25
@@ -85,7 +85,7 @@ confusionMatrix(y_pred_lr, df$income)
 cv_dt = train(income ~ ., df, method="rpart", 
                    trControl= trainControl(method="cv", number = 10, verboseIter = TRUE))
 y_pred_cv_dt = predict(cv_dt, newdata = test_set[-12], type = 'raw')
-fancyRpartPlot(cv_dt$finalModel)
+rpart.plot(cv_dt$finalModel)
 confusionMatrix(y_pred_cv_dt, test_set$income)
 # acc 0.8234 terminal nodes 6
 # cp 0.00792488 acc  0.8227577 on classifier
