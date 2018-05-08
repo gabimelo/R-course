@@ -29,13 +29,19 @@ z_score <- function(df){
 
 df <- z_score(df)
 
-# distance functions
+# distance function
 a_dist <- function(df) {
   return(NULL)
 }
 
-create_a_dist <- function (df) {
-  return(NULL)
+create_a_dist <- function (dataframe, custom_dist=a_dist) {
+  mat <- matrix(, nrow = nrow(dataframe), ncol = nrow(dataframe))
+  for (i in 1:nrow(dataframe)){
+    for (j in 1:nrow(dataframe)){
+      mat[i,j] <- custom_dist(dataframe[i,], dataframe[j,])
+    }
+  }
+  return(mat)
 }
 
 silhouette_coefficient <- function() {
