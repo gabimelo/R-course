@@ -1,80 +1,49 @@
-old_vals <- c(1,2,1.3,2.3,1.6,2.6,6,7,6.3,7.3,6.6,7.6)
-vals <- c(1,2,1.3,2.3,4.6,2.6,6,7,6.3,7.3,6.6,7.6)
-df = data.frame(old_vals,vals)
+df = data.frame(c(1,2,3,4), c(2,3,4,5), c(4,5,6,7))
+names(df) <- c("c1","c2","c3")
+df = data.frame(c(1,2,3,4), c(2,3,4,5))
 names(df) <- c("c1","c2")
-#plot(df)
 
-custom_dist <- function(v1, v2){
-  sqrt(sum((v1-v2)**2))
-}
+df = data.frame(c(18,20,56), c("male","male","female"))
+names(df) <- c("age","sex")
 
-for (k in 1:nrow(centers)) {
-  z[, k] <- sqrt(colSums((t(x) - centers[k, ])^2))
-}
-
-sqrt(colSums((t(x) - centers[k, ])^2))
-
-
-a_dist_make <- function(dataframe, centers) {
-  #print('no')
-  #print(centers)
-  #print(df)
+a_dist <- function(v1, v2){
+  distances <- rep(0,length(v1))
   
+  distances[1] <- abs(as.numeric(v1[1]) - as.numeric(v2[1]))
+  #distances[2] <- abs(as.numeric(v1[2]) - as.numeric(v2[2]))
+  #distances[3] <- abs(as.numeric(v1[3]) - as.numeric(v2[3]))
+  #distances[4] <- if (v1[4] != v2[4]) 1 else 0
+  #distances[5] <- if (v1[5] != v2[5]) 1 else 0
+  #distances[6] <- abs(as.numeric(v1[6]) - as.numeric(v2[6]))
+  distances[2] <- if (v1[2] != v2[2]) 1 else 0
+  
+  #sqrt(sum((v1-v2)^2))
+  mean(distances)
+}
+
+most_frequent <- function(col){
+  dd <- unique(col)
+  dd[which.max(tabulate(match(col,dd)))]
+}
+
+a_means <- function(df){
+  #new <- data.frame(0,0)
+  #names(new) <- colnames(df)
+  #rbind(new, c(mean(df[[1]]), most_frequent(df[[2]])))[2,]
+  c(mean(df[[1]]), most_frequent(df[[2]]))
+}
+
+create_a_dist <- function(dataframe, centers=dataframe, custom_dist=a_dist) {
   if (ncol(dataframe) != ncol(centers)) 
     stop(sQuote("x"), " and ", sQuote("centers"), " must have the same number of columns")
   
   mat <- matrix(0, nrow = nrow(dataframe), ncol = nrow(centers))
   for (i in 1:nrow(dataframe)){
     for (j in 1:nrow(centers)){
-      mat[i,j] <- custom_dist(dataframe[i,], centers[j,])
+      mat[i,j] <- a_dist(dataframe[i,], centers[j,])
     }
   }
-  #print(mat)
   return(mat)
 }
 
-
-kcca(df,2,family=kccaFamily(dist=a_dist_make,cent="mean"))
-# kcca(df,2,family=kccaFamily(dist=a_custom_dist,cent="mean"))
-
-distEuclidean
-
-
-
-# dont even know anymor
-a_dist_make <- function(a_df, centers=NULL) {
-  if(is.null(centers)){
-    print('yes')
-    
-    mat <- matrix(, nrow = nrow(a_df), ncol = nrow(a_df))
-    for (i in 1:nrow(a_df)){
-      for (j in 1:nrow(a_df)){
-        mat[i,j] <- custom_dist(a_df[i,], a_df[j,])
-      }
-    }
-    #print(as.dist(mat))
-    return(as.dist(mat))
-    #return(mat)
-  }
-  else {
-    #print('no')
-    #print(centers)
-    #print(df)
-    
-    if (ncol(a_df) != ncol(centers)) 
-      stop(sQuote("x"), " and ", sQuote("centers"), " must have the same number of columns")
-    
-    mat <- matrix(0, nrow = nrow(a_df), ncol = nrow(centers))
-    #for (i in 1:nrow(a_df)){
-      #for (j in 1:nrow(centers)){
-       # mat[i,j] <- a_custom_dist(df, centers[j,])
-      #}
-    #}
-    for (k in 1:nrow(centers)) {
-      mat[, k] <- sqrt(colSums((t(a_df) - centers[k, ])^2))
-    }
-    print(mat)
-    return(mat)
-  }
-}
-
+kcca(df,2,family=kccaFamily(dist=create_a_dist, cent=a_means))
