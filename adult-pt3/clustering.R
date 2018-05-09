@@ -9,28 +9,23 @@ full_df <- read.csv("adult/adult.csv", col.names = cnames, header = FALSE, nrows
 df <- data.frame("age" = full_df$age, 
                  "fnlwgt" = full_df$fnlwgt, 
                  "education.num" = full_df$education.num,
-                 "marital.status" = full_df$marital.status,
-                 "sex" = full_df$sex,
+                 # JUST FOR TESTING
+                 #"marital.status" = full_df$marital.status,
+                 #"sex" = full_df$sex,
                  "hours.per.week" = full_df$hours.per.week)
-
-# JUST FOR TESTING
-df <- data.frame("age" = full_df$age, 
-                 "fnlwgt" = full_df$fnlwgt)
 
 # z score normalization
 
-z_score <- function(df){
+z_score <- function(dataframe){
   continuous_names <- c("age", "fnlwgt", "education.num", "hours.per.week")
-  # JUST FOR TESTING
-  continuous_names <- c("age", "fnlwgt")
   for (name in continuous_names){
-    mf <- mean(df[[name]])
-    sf <- sum(sapply(df[[name]], function(x) abs(x - mf)))/600
+    mf <- mean(dataframe[[name]])
+    sf <- sum(sapply(dataframe[[name]], function(x) abs(x - mf)))/600
     
-    df[[name]] <- sapply(df[[name]], function(x) (x-mf)/sf)
+    dataframe[[name]] <- sapply(dataframe[[name]], function(x) (x-mf)/sf)
   }
   
-  return(df)
+  return(dataframe)
 }
 
 df <- z_score(df)
@@ -79,10 +74,34 @@ k_values = c(2,4,6)
 
 for (k in k_values) {
   model <- kcca(df,k,family=kccaFamily(dist=create_a_dist_for_centers, cent=colMeans))
-  print('silhoutte for k:')
-  print(k)
+  print(info(model, "size"))
   print(Silhouette(model, df))
 }
+
+# using only continuous attributes and euclidian distance
+# 1   2 
+# 336 264 
+# 1         2 
+# 0.1533202 0.2291694 
+# 1   2   3   4 
+# 264  93 166  77 
+# 1         2         3         4 
+# 0.2975350 0.1591932 0.1718354 0.1801799 
+# 1   2   3   4   5   6 
+# 125  71 100 184  67  53 
+# 1         2         3         4         5         6 
+# 0.2742589 0.1242666 0.1677348 0.3544542 0.1646965 0.1963337 
+
+# silhouttes_2 <- c(0.2908005,0.3571671)
+# silhouttes_4 <- c(0.4033106,0.3729530,0.3053805,0.2725825)
+# silhouttes_6 <- c(0.3935523,0.3859331,0.2898036,0.3521418,0.3681773,0.2676706)
+# 
+# t.test(silhouttes_2, silhouttes_4)
+# t.test(silhouttes_2, silhouttes_6)
+# t.test(silhouttes_4, silhouttes_6)
+
+# all p values are really big, so failed to reject H0
+# so we cant say that the sillhouttes coefficient is better in any of them
 
 # to see the clusters
 #image(model)
