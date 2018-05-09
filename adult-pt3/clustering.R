@@ -36,15 +36,19 @@ a_dist <- function(v1, v2){
 }
 
 # function dist_make of package usedist does this
-create_a_dist <- function (dataframe, custom_dist=a_dist) {
+# get structure of dist function for kccaFamily from distEuclidean
+create_a_dist <- function(dataframe, centers=dataframe, custom_dist=a_dist) {
+  if (ncol(dataframe) != ncol(centers)) 
+    stop(sQuote("x"), " and ", sQuote("centers"), " must have the same number of columns")
+  
   # JUST FOR TESTING
-  mat <- matrix(0, nrow=10, ncol=10)
-  for (i in 1:10){
-    for (j in 1:10){
-  #mat <- matrix(0, nrow = nrow(dataframe), ncol = nrow(dataframe))
-  #for (i in 1:nrow(dataframe)){
-  #  for (j in 1:nrow(dataframe)){
-      mat[i,j] <- custom_dist(dataframe[i,], dataframe[j,])
+  # mat <- matrix(0, nrow=10, ncol=10)
+  # for (i in 1:10){
+  #  for (j in 1:10){
+  mat <- matrix(0, nrow = nrow(dataframe), ncol = nrow(centers))
+  for (i in 1:nrow(dataframe)){
+    for (j in 1:nrow(centers)){
+      mat[i,j] <- a_dist(dataframe[i,], centers[j,])
     }
   }
   return(mat)
@@ -56,24 +60,10 @@ create_a_dist(df)[0:10,0:10]
 library(flexclust)
 set.seed(42)
 
-# get structure of dist function for kccaFamily from distEuclidean
-create_a_dist_for_centers <- function(dataframe, centers) {
-  if (ncol(dataframe) != ncol(centers)) 
-    stop(sQuote("x"), " and ", sQuote("centers"), " must have the same number of columns")
-  
-  mat <- matrix(0, nrow = nrow(dataframe), ncol = nrow(centers))
-  for (i in 1:nrow(dataframe)){
-    for (j in 1:nrow(centers)){
-      mat[i,j] <- a_dist(dataframe[i,], centers[j,])
-    }
-  }
-  return(mat)
-}
-
 k_values = c(2,4,6)
 
 for (k in k_values) {
-  model <- kcca(df,k,family=kccaFamily(dist=create_a_dist_for_centers, cent=colMeans))
+  model <- kcca(df,k,family=kccaFamily(dist=create_a_dist, cent=colMeans))
   print(info(model, "size"))
   print(Silhouette(model, df))
 }
