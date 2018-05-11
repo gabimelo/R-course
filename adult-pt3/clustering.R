@@ -4,6 +4,10 @@ cnames <- c("age", "workclass", "fnlwgt", "education", "education.num", "marital
             "hours.per.week", "native.country", "income")
 
 full_df <- read.csv("adult/adult.csv", col.names = cnames, header = FALSE, nrows=600)
+# > table(full_df$income)
+# 
+# <=50K   >50K 
+# 466    134 
 
 # df is the simple adult set:
 df <- data.frame("age" = full_df$age, 
@@ -36,12 +40,23 @@ a_dist <- function(v1, v2){
   for (i in 1:length(v1)){
     if (suppressWarnings(!is.na(as.numeric(v1[i])))){
       distances[i] <- abs(as.numeric(v1[i]) - as.numeric(v2[i]))
+      # distances[i] <- (as.numeric(v1[i]) - as.numeric(v2[i]))^2
+      # > print(info(model_2, "size"))
+      # 1   2 
+      # 265 335 
+      # > print(Silhouette(model_2, df))
+      # 1         2 
+      # 0.1296653 0.4191671 
     }
     else {
       distances[i] <- if (v1[i] != v2[i]) 1 else 0
     }
   }
   mean(distances)
+  #sqrt(sum(distances))
+  # > print(Silhouette(model_2, df))
+  # 1          2 
+  # 0.09225143 0.13398464 
 }
 
 # function dist_make of package usedist does this
@@ -134,10 +149,10 @@ print(Silhouette(model_6, df))
 # > model_2 <- kcca(df,k,family=kccaFamily(dist=create_a_dist, cent=a_means))
 # > print(info(model_2, "size"))
 # 1   2 
-# 362 238 
+# 475 125 
 # > print(Silhouette(model_2, df))
 # 1         2 
-# 0.1876034 0.1797288 
+# 0.1831548 0.2540269 
 # > 
 #   > k = 4
 # > model_4 <- kcca(df,k,family=kccaFamily(dist=create_a_dist, cent=a_means))
@@ -160,6 +175,10 @@ print(Silhouette(model_6, df))
 silhouttes_2 <- c(0.1618181,0.2238968)
 silhouttes_4 <- c(0.1057056,0.2171990,0.1803694,0.1644212)
 silhouttes_6 <- c(0.09210878,0.16996839,0.21111160,0.22947173,0.18697583,0.19903790)
+
+mean(silhouttes_2)
+mean(silhouttes_4)
+mean(silhouttes_6)
 
 t.test(silhouttes_2, silhouttes_4)
 t.test(silhouttes_2, silhouttes_6)
