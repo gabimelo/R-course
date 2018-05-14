@@ -82,3 +82,23 @@ misclassification = (FN+FP)/total #
 
 print(accuracy)
 print(cm)
+
+y_pred = predict(automatic, node='income', data=df[-10])
+
+cm = table(df[,10], y_pred)
+
+TN = true_negatives = cm[1, 1]
+FN = false_negatives = cm[2, 1]
+FP = false_positives = cm[1, 2]
+TP = true_positives = cm[2, 2]
+total = TN + FN + FP + TP
+
+accuracy = (TN + TP)/total # 
+sensitivity = TP/(TP+FN) #
+specificity = TN/(TN+FP) #
+precision = TP/(TP+FP) # 
+
+misclassification = (FN+FP)/total #
+
+print(accuracy)
+print(cm)

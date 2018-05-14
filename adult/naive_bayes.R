@@ -1,5 +1,10 @@
 library(e1071)
 
+
+dag = model2network("[american][white][male][married][primeage][over50k|white:male:married:primeage:american]")
+
+plot(dag)
+
 df <- read.csv("adult/df.csv")
 test_set <- read.csv("adult/test_set.csv")
 df['X'] <- NULL
